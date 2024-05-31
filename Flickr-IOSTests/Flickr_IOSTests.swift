@@ -8,29 +8,33 @@
 import XCTest
 @testable import Flickr_IOS
 
-final class Flickr_IOSTests: XCTestCase {
+final class FlickrViewModelTests: XCTestCase {
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
-    }
+    func testFetchImages_SuccessfulResponse() {
+        let viewModel = FlickrViewModel()
+        let expectation = XCTestExpectation(description: "Fetch images")
 
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
+        viewModel.fetchImages(for: "dogs")
 
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-        // Any test you write for XCTest can be annotated as throws and async.
-        // Mark your test throws to produce an unexpected failure when your test encounters an uncaught error.
-        // Mark your test async to allow awaiting for asynchronous code to complete. Check the results with assertions afterwards.
-    }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+            XCTAssertFalse(viewModel.images.isEmpty, "Images should be populated")
+            expectation.fulfill()
         }
+
+        wait(for: [expectation], timeout: 6.0)
     }
 
+    func testFetchImages_InvalidTag() {
+        let viewModel = FlickrViewModel()
+        let expectation = XCTestExpectation(description: "Fetch images")
+
+        viewModel.fetchImages(for: "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZAAAAAAAAAAAAAAAAAAAAAAAAAA")
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
+            XCTAssertTrue(viewModel.images.isEmpty, "Images should be empty for invalid tag")
+            expectation.fulfill()
+        }
+
+        wait(for: [expectation], timeout: 6.0)
+    }
 }
