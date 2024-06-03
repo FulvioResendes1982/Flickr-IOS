@@ -10,31 +10,31 @@ import XCTest
 
 final class FlickrViewModelTests: XCTestCase {
 
-    func testFetchImages_SuccessfulResponse() {
+    func testFetchImages_SuccessfulResponse() async {
         let viewModel = FlickrViewModel()
         let expectation = XCTestExpectation(description: "Fetch images")
 
-        viewModel.fetchImages(for: "dogs")
+        _ = await viewModel.fetchImages(for: "dogs")
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
             XCTAssertFalse(viewModel.images.isEmpty, "Images should be populated")
             expectation.fulfill()
         }
 
-        wait(for: [expectation], timeout: 6.0)
+        await fulfillment(of: [expectation], timeout: 6.0)
     }
 
-    func testFetchImages_InvalidTag() {
+    func testFetchImages_InvalidTag() async {
         let viewModel = FlickrViewModel()
         let expectation = XCTestExpectation(description: "Fetch images")
 
-        viewModel.fetchImages(for: "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZAAAAAAAAAAAAAAAAAAAAAAAAAA")
+        _ = await viewModel.fetchImages(for: "ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZAAAAAAAAAAAAAAAAAAAAAAAAAA")
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 5.0) {
             XCTAssertTrue(viewModel.images.isEmpty, "Images should be empty for invalid tag")
             expectation.fulfill()
         }
 
-        wait(for: [expectation], timeout: 6.0)
+        await fulfillment(of: [expectation], timeout: 6.0)
     }
 }

@@ -2,36 +2,68 @@ import SwiftUI
 
 struct DetailView: View {
     let image: FlickrImage
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
     
     var body: some View {
-        VStack {
-            AsyncImage(url: URL(string: image.media.m)) { image in
-                image
-                    .resizable()
-                    .scaledToFit()
-            } placeholder: {
-                ProgressView()
+        if horizontalSizeClass == .compact {
+            VStack {
+                AsyncImage(url: URL(string: image.media.m)) { image in
+                    image
+                        .resizable()
+                        .scaledToFit()
+                } placeholder: {
+                    ProgressView()
+                }
+                .frame(height: 300)
+                
+                Text("Description")
+                    .font(.headline)
+                    .padding(.top)
+                Text(image.description.strippingHTML())
             }
-            .frame(height: 300)
+            .navigationTitle(image.title)
+            .padding()
             
-            Text("Description")
+            Text("Author")
                 .font(.headline)
                 .padding(.top)
-            Text(image.description.strippingHTML())
+            Text(image.author)
+            
+            Text("Published")
+                .font(.headline)
+                .padding(.top)
+            Text(image.published.formattedDate())
+        } else {
+            HStack {
+                AsyncImage(url: URL(string: image.media.m)) { image in
+                    image
+                        .resizable()
+                        .scaledToFit()
+                } placeholder: {
+                    ProgressView()
+                }
+                .frame(height: 300)
+                
+                VStack() {
+                    Text("Description")
+                        .font(.headline)
+                        .padding(.top)
+                    Text(image.description.strippingHTML())
+
+                    Text("Author")
+                        .font(.headline)
+                        .padding(.top)
+                    Text(image.author)
+                    
+                    Text("Published")
+                        .font(.headline)
+                        .padding(.top)
+                    Text(image.published.formattedDate())
+                }
+            }
+            .navigationTitle(image.title)
+            .padding()                        
         }
-        .navigationTitle(image.title)
-        .padding()
-        
-        Text("Author")
-            .font(.headline)
-            .padding(.top)
-        Text(image.author)
-        
-        Text("Published")
-            .font(.headline)
-            .padding(.top)
-        Text(image.published.formattedDate())
-        
     }
 }
 

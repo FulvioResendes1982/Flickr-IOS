@@ -18,6 +18,7 @@
 		9AF73AAF2C0A51140006CE0F /* FlickrViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF73AAE2C0A51140006CE0F /* FlickrViewModel.swift */; };
 		9AF73AB12C0A51890006CE0F /* DetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF73AB02C0A51890006CE0F /* DetailView.swift */; };
 		9AF73AB32C0A5DB80006CE0F /* Helper+Strings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF73AB22C0A5DB80006CE0F /* Helper+Strings.swift */; };
+		9AF73AB92C0E69F00006CE0F /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9AF73AB82C0E69F00006CE0F /* Service.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +53,7 @@
 		9AF73AAE2C0A51140006CE0F /* FlickrViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlickrViewModel.swift; sourceTree = "<group>"; };
 		9AF73AB02C0A51890006CE0F /* DetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailView.swift; sourceTree = "<group>"; };
 		9AF73AB22C0A5DB80006CE0F /* Helper+Strings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Helper+Strings.swift"; sourceTree = "<group>"; };
+		9AF73AB82C0E69F00006CE0F /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +111,7 @@
 				9A5B26052C0A48ED00FD7421 /* Preview Content */,
 				9AF73AB62C0A68C20006CE0F /* View */,
 				9AF73AB52C0A68AE0006CE0F /* ViewModel */,
+				9AF73AB82C0E69F00006CE0F /* Service.swift */,
 			);
 			path = "Flickr-IOS";
 			sourceTree = "<group>";
@@ -302,6 +305,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9AF73AB32C0A5DB80006CE0F /* Helper+Strings.swift in Sources */,
+				9AF73AB92C0E69F00006CE0F /* Service.swift in Sources */,
 				9A5B26022C0A48EA00FD7421 /* ContentView.swift in Sources */,
 				9A5B26002C0A48EA00FD7421 /* Flickr_IOSApp.swift in Sources */,
 				9AF73AAD2C0A50C70006CE0F /* FlickrImage.swift in Sources */,

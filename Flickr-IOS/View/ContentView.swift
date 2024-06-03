@@ -2,11 +2,24 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var viewModel = FlickrViewModel()
-    let columns = [
-        GridItem(.flexible()),
-        GridItem(.flexible()),
-        GridItem(.flexible())
-    ]
+    @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    @State var width:CGFloat = 120
+    @State var height:CGFloat = 120
+    
+    var columns: [GridItem] {
+        if horizontalSizeClass == .compact {
+            width = 45
+            height = 45
+        } else {
+            width = 120
+            height = 120
+        }
+        return [
+            GridItem(.flexible()),
+            GridItem(.flexible()),
+            GridItem(.flexible())
+        ]
+    }
     
     var body: some View {
         NavigationView {
@@ -19,11 +32,11 @@ struct ContentView: View {
                                     image
                                         .resizable()
                                         .scaledToFill()
-                                        .frame(width: 120, height: 120)
+                                        .frame(width: width, height: height)
                                         .clipped()
                                 } placeholder: {
                                     ProgressView()
-                                        .frame(width: 120, height: 120)
+                                        .frame(width: width, height: height)
                                 }
                             }
                         }
@@ -33,11 +46,13 @@ struct ContentView: View {
                 .navigationTitle("Flickr Images")
                 .searchable(text: $viewModel.searchTag)
                 .onChange(of: viewModel.searchTag) { newTag in
-                    viewModel.fetchImages(for: newTag)
+                    Task {
+                        await viewModel.fetchImages(for: newTag)
+                    }
                 }
             }
         }
-    }
+    }    
 }
 
 struct ContentView_Previews: PreviewProvider {
