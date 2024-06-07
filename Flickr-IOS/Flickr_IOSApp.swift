@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct Flickr_IOSApp: App {
+    @StateObject private var vm = FlickrViewModel()
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
         }
+        .environmentObject(vm)
     }
 }

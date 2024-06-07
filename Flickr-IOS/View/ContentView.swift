@@ -3,6 +3,7 @@ import SwiftUI
 struct ContentView: View {
     @StateObject private var viewModel = FlickrViewModel()
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
+    // @EnvironmentObject private var vm: FlickrViewModel
     @State var width:CGFloat = 120
     @State var height:CGFloat = 120
     
@@ -32,6 +33,7 @@ struct ContentView: View {
         NavigationStack {
             ScrollView {
                 LazyVGrid(columns: columns, spacing: 10) {
+                    /* ForEach(viewModel.filteredImages) { image in */
                     ForEach(viewModel.images) { image in
                         NavigationLink(destination: DetailView(image: image)) {
                             AsyncImage(url: URL(string: image.media.m)) { image in
@@ -52,16 +54,21 @@ struct ContentView: View {
             .navigationTitle("Flickr Images")
             .searchable(text: $viewModel.searchTag)
             .onChange(of: viewModel.searchTag) { newTag in
-                if newTag != "" {
-                    Task {
-                        await viewModel.fetchImages(for: newTag)
+                Task {
+                    if newTag != "" {
+                        // await viewModel.fetchImages(for: newTag)
+                        viewModel.addSubscribers()
+                    } else {
+                        viewModel.images = []
                     }
-                } else {
-                    viewModel.images = []
                 }
             }
             .overlay {
-                if viewModel.images.isEmpty {
+                if !viewModel.errorMessage.isEmpty {
+                    ContentUnavailableView("Oh no",
+                                           systemImage: "externaldrive.trianglebadge.exclamationmark",
+                                           description: Text("We seem to have a server error"))
+                } else if viewModel.images.isEmpty {
                     ContentUnavailableView.search
                 }
             }
@@ -72,6 +79,7 @@ struct ContentView: View {
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
+            .environmentObject(dev.flickerVM)
     }
 }
 

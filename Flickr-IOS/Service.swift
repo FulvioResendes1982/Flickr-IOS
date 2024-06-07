@@ -1,13 +1,8 @@
-//
-//  Service.swift
-//  Flickr-IOS
-//
-//  Created by fgrmac on 03/06/24.
-//
-
 import Foundation
+import Combine
 
-public protocol ServiceManager {
+protocol ServiceManager {
+    func getImages(for tag: String) -> AnyPublisher<FlickrResponse, Error>
     func GET(from url: String, completionHandler: @escaping (Result<Data, Never>) -> Void ) async
     func POST(from url: String, completionHandler: @escaping (Result<Bool, Never>) -> Void ) async
     func PUT(from url: String, completionHandler: @escaping (Result<Bool, Never>) -> Void ) async
@@ -16,6 +11,25 @@ public protocol ServiceManager {
 
 class Service: ServiceManager {
     
+    @Published var allImages: [FlickrImage] = []
+    var imageSubscription: AnyCancellable?
+    
+    func getImages(for tag: String) -> AnyPublisher<FlickrResponse, Error> {
+        guard let url = URL(string: "https://www.flickr.com/services/feeds/photos_public.gne?format=json&nojsoncallback=1&tags=\(tag)") else { fatalError("Invalid URL") }
+        
+        return URLSession.shared.dataTaskPublisher(for: url)
+            .subscribe(on: DispatchQueue.global(qos: .default))
+            .tryMap { (output) -> Data in
+                guard let response = output.response as? HTTPURLResponse,
+                      response.statusCode >= 200 && response.statusCode < 300 else {
+                    throw URLError(.badServerResponse)
+                }
+                return output.data
+            }
+            .receive(on: DispatchQueue.main)
+            .decode(type: FlickrResponse.self, decoder: JSONDecoder())
+            .eraseToAnyPublisher()
+    }
     
     //MARK: - GET
     final func GET(from url: String, completionHandler: @escaping (Result<Data, Never>) -> Void) async {        
